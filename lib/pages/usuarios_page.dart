@@ -1,5 +1,7 @@
 import 'package:chat/models/usaurio.dart';
+import 'package:chat/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 
@@ -24,16 +26,26 @@ class _UsuariosPageState extends State<UsuariosPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authServices = Provider.of<AuthServices>(context);
+    //estraemos el nombre de usaurio
+    final usuario = authServices.usuario;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mi nombre', style: TextStyle(color: Colors.black54),),
+        title: Text( usuario.nombre , style: TextStyle(color: Colors.black87),),
         centerTitle: true,
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.exit_to_app, color: Colors.black54,),
+          icon: Icon(Icons.exit_to_app, color: Colors.black87,),
           onPressed: () {
+              //desconectarnos del soket server
 
+              //para cerrar sesion   
+              Navigator.pushReplacementNamed(context, 'login');
+              //borra el token de sesion 
+              AuthServices.deleteToken();
           },
         ),
         actions: <Widget>[
@@ -49,7 +61,9 @@ class _UsuariosPageState extends State<UsuariosPage> {
         controller: _refreshController,
         enablePullDown: true,
         //aqui se pasa el metodo que va a refrescar
-        onRefresh: _cargarUsuarios(),
+        //solo hay que pasar la referencia o me saldra este error
+        //type 'Future<dynamic>' is not a subtype of type '(() => void)?'
+        onRefresh: _cargarUsuarios,
         //este es el poll que se perzonaliza
         header: WaterDropHeader(
             complete: Icon(Icons.check, color: Colors.blue[400]),

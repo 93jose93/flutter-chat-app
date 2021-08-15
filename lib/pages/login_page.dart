@@ -1,8 +1,11 @@
+import 'package:chat/helpers/mostrar_alerta.dart';
+import 'package:chat/services/auth_services.dart';
 import 'package:chat/widgets/boton_azul.dart';
 import 'package:chat/widgets/custom_input.dart';
 import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/logo.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 class LoginPage extends StatelessWidget {
@@ -62,6 +65,9 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+
+    final authService = Provider.of<AuthServices>(context);
+
     return Container(
       margin: EdgeInsets.only(top: 5),
       padding: EdgeInsets.symmetric( horizontal: 50),
@@ -87,9 +93,32 @@ class __FormState extends State<_Form> {
           //aqui se colocan los argumentos que se obligan en boton_azul
           BotonAzul(
             text: 'Ingrese',
-            onPressedfuntion: () {
-              print(emailCtrol.text);
-              print(passCtrol.text);
+            //y aqui agregamos un ternario para desabilitar el botton cuando se este haciendo login
+            //como ahora regresa un bool de auts_services necesitamos async
+            onPressedfuntion: authService.autenticando ? null : () async {
+              
+              //quita el teclado al hacer login
+              FocusScope.of(context).unfocus();
+              
+              //print(emailCtrol.text);
+              //print(passCtrol.text);
+              //solo necesito la referencia
+
+              //trim() sirve para no enviar espacios en blanco en el input de login
+              final loginOK = await authService.login(emailCtrol.text.trim(), passCtrol.text.trim());
+
+              //validacion si es login es correcto o no
+              if( loginOK == true) {
+                  //conectar a nuestro soket.io server
+
+                  //navegar en otra pantalla
+                  //pushReplacementNamed este me permite que de dirija a la pagina pero que no pueda regresar 
+                  Navigator.pushReplacementNamed(context, 'usuarios');
+              } else {
+                  //mostrar alerta
+                  //se creo una carpeta llamado helper para costruir el diseño de la alerta
+                  mostrartAlerta(context, 'Login incorrecto', loginOK);
+              }
             },
           )
         ],
