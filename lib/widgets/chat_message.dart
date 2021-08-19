@@ -1,4 +1,6 @@
+import 'package:chat/services/auth_services.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ChatMessage extends StatelessWidget {
   
@@ -17,6 +19,10 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final authServices = Provider.of<AuthServices>(context, listen: false);
+
+
     //esto es para que se agregue la animacion
     return FadeTransition(
       opacity: animationController,
@@ -26,7 +32,8 @@ class ChatMessage extends StatelessWidget {
         sizeFactor: CurvedAnimation(parent: animationController, curve: Curves.easeOut),
         child: Container(
           //ejemplo si soy el que envia mensaje mi id es este == '123'
-          child: this.uid == '123'
+          //id de cuando recibo un mensaje
+          child: this.uid == authServices.usuario.uid
               //si soy yo entonces 
               ? _myMessage()
               //caso contrario

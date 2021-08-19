@@ -1,5 +1,6 @@
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/services/auth_services.dart';
+import 'package:chat/services/socket_services.dart';
 import 'package:chat/widgets/boton_azul.dart';
 import 'package:chat/widgets/custom_input.dart';
 import 'package:chat/widgets/labels.dart';
@@ -67,6 +68,7 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthServices>(context);
+    final socketServices = Provider.of<SocketServices>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 5),
@@ -110,6 +112,7 @@ class __FormState extends State<_Form> {
               //validacion si es login es correcto o no
               if( loginOK == true) {
                   //conectar a nuestro soket.io server
+                  socketServices.connect();
 
                   //navegar en otra pantalla
                   //pushReplacementNamed este me permite que de dirija a la pagina pero que no pueda regresar 

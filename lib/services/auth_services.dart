@@ -34,7 +34,8 @@ class AuthServices with ChangeNotifier {
       final _storage = new FlutterSecureStorage();
       //leer el token
       final token = await _storage.read(key: 'token');
-
+      
+      //aqui enviaremos el token a asoket services para enviarlo al servidor
       return token;
    }
 

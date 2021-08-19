@@ -1,5 +1,6 @@
 import 'package:chat/helpers/mostrar_alerta.dart';
 import 'package:chat/services/auth_services.dart';
+import 'package:chat/services/socket_services.dart';
 import 'package:chat/widgets/boton_azul.dart';
 import 'package:chat/widgets/custom_input.dart';
 import 'package:chat/widgets/labels.dart';
@@ -68,6 +69,7 @@ class __FormState extends State<_Form> {
   Widget build(BuildContext context) {
 
     final authService = Provider.of<AuthServices>(context);
+    final socketServices = Provider.of<SocketServices>(context);
 
     return Container(
       margin: EdgeInsets.only(top: 5),
@@ -110,6 +112,8 @@ class __FormState extends State<_Form> {
               
               if(registroOk == true) {
                 //conectar a soket server
+                socketServices.connect();
+
                 Navigator.pushReplacementNamed(context, 'usuarios');
               } else {
                 mostrartAlerta(context, 'Registro incorrecto', registroOk);
